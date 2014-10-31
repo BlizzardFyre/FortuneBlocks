@@ -1,6 +1,7 @@
 package com.blizzardfyre.fortuneblocks;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -15,14 +17,37 @@ public class Main extends JavaPlugin {
 	private static List<String> materials = new ArrayList<String>();
 	private static List<String> placed = new ArrayList<String>();
 	private static String prefix = null;
+	private File placedFile = null;
+	private YamlConfiguration placedConfig = null;
 
 	public void onEnable() {
-		if (getConfig().contains("palced")) new File(getDataFolder(), "config.yml").renameTo(new File(getDataFolder(), "oldconfig.yml"));
-		saveDefaultConfig();
+		if (getConfig().contains("palced")) {
+			File oldFile = new File(getDataFolder(), "config.yml");
+			YamlConfiguration yml = YamlConfiguration.loadConfiguration(oldFile);
+			oldFile.delete();
+			System.out.println("t");
+			saveDefaultConfig();
+			reloadConfig();
+			getConfig().set("blocks", yml.getStringList("blocks"));
+			getConfig().set("prefix", yml.getString("prefix"));
+			saveConfig();
+		} else {
+			saveDefaultConfig();
+		}
+		File placedFile = new File(getDataFolder(), "placed.yml");
+		if (!placedFile.exists()) {
+			try {
+				placedFile.createNewFile();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		this.placedFile = placedFile;
+		placedConfig = YamlConfiguration.loadConfiguration(placedFile);
 		prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix")) + " ";
 		for (String string : getConfig().getStringList("blocks"))
 			materials.add(string.toUpperCase());
-		for (String string : getConfig().getStringList("placed"))
+		for (String string : placedConfig.getStringList("placed"))
 			placed.add(string);
 		Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
 		getCommand("fortuneblocks").setExecutor(new CommandHandler());
@@ -35,8 +60,10 @@ public class Main extends JavaPlugin {
 	}
 
 	public static boolean containsMat(Material mat) {
-		if (materials.contains(mat.toString())) return true;
-		else return false;
+		if (materials.contains(mat.toString()))
+			return true;
+		else
+			return false;
 	}
 
 	public void removeMaterial(Material mat) {
@@ -47,13 +74,19 @@ public class Main extends JavaPlugin {
 
 	public void addPlaced(Location loc) {
 		placed.add(locationToString(loc));
-		getConfig().set("placed", placed);
-		saveConfig();
+		placedConfig.set("placed", placed);
+		try {
+			placedConfig.save(placedFile);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public boolean wasPlaced(Location loc) {
-		if (placed.contains(locationToString(loc))) return true;
-		else return false;
+		if (placed.contains(locationToString(loc)))
+			return true;
+		else
+			return false;
 	}
 
 	public static String locationToString(Location loc) {
