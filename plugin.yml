@@ -1,5 +1,5 @@
 main: com.blizzardfyre.fortuneblocks.Main
-version: 0.2
+version: 0.3
 name: FortuneBlocks
 author: BlizzardFyre
 commands:
