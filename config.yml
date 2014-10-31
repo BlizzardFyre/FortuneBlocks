@@ -1,0 +1,9 @@
+blocks:
+  - diamond_block
+  - emerald_block
+  - coal_block
+  - lapis_block
+  - gold_block
+  - iron_block
+  - quartz_block
+prefix: '&e[&6FortuneBlocks&e]'

@@ -1,0 +1,9 @@
+main: com.blizzardfyre.fortuneblocks.Main
+version: 0.2
+name: FortuneBlocks
+author: BlizzardFyre
+commands:
+  fortuneblocks:
+    usage: /<command>
+    description: The base command for the plugin.
+    aliases: [fb, fortuneblock, fblock]
