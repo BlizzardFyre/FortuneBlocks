@@ -1,5 +1,6 @@
 package com.blizzardfyre.fortuneblocks;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class Main extends JavaPlugin {
 	private static String prefix = null;
 
 	public void onEnable() {
-		if (getConfig().contains("palced")) getConfig().set("placed", null);
+		if (getConfig().contains("palced")) new File(getDataFolder(), "config.yml").renameTo(new File(getDataFolder(), "oldconfig.yml"));
 		saveDefaultConfig();
 		prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix")) + " ";
 		for (String string : getConfig().getStringList("blocks"))
