@@ -16,14 +16,13 @@ public class Main extends JavaPlugin {
 	private static String prefix = null;
 
 	public void onEnable() {
+		if (getConfig().contains("palced")) getConfig().set("placed", null);
 		saveDefaultConfig();
 		prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix")) + " ";
-		for (String string : getConfig().getStringList("blocks")) {
+		for (String string : getConfig().getStringList("blocks"))
 			materials.add(string.toUpperCase());
-		}
-		for (String string : getConfig().getStringList("placed")) {
+		for (String string : getConfig().getStringList("placed"))
 			placed.add(string);
-		}
 		Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
 		getCommand("fortuneblocks").setExecutor(new CommandHandler());
 	}
@@ -35,11 +34,8 @@ public class Main extends JavaPlugin {
 	}
 
 	public static boolean containsMat(Material mat) {
-		if (materials.contains(mat.toString())) {
-			return true;
-		} else {
-			return false;
-		}
+		if (materials.contains(mat.toString())) return true;
+		else return false;
 	}
 
 	public void removeMaterial(Material mat) {
@@ -50,16 +46,13 @@ public class Main extends JavaPlugin {
 
 	public void addPlaced(Location loc) {
 		placed.add(locationToString(loc));
-		getConfig().set("palced", placed);
+		getConfig().set("placed", placed);
 		saveConfig();
 	}
 
 	public boolean wasPlaced(Location loc) {
-		if (placed.contains(locationToString(loc))) {
-			return true;
-		} else {
-			return false;
-		}
+		if (placed.contains(locationToString(loc))) return true;
+		else return false;
 	}
 
 	public static String locationToString(Location loc) {

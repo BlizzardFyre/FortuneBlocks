@@ -32,6 +32,8 @@ public class BlockListener implements Listener {
 
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
+		Material mat = e.getBlock().getType();
+		if (!Main.containsMat(mat)) return;
 		Main.getMain().addPlaced(e.getBlock().getLocation());
 	}
 
